@@ -26,9 +26,9 @@ find /usr/html -type f | xargs chmod 664
 find /usr/html -type d | xargs chmod 775
 find /usr/html -type d | xargs chmod +s
 
-# install certs if virtual host defined and certs.conf is non-zero
-if [ "$VIRTUAL_HOST" ] && [ ! -s ./certs.conf ] ; then
-  certbot certonly -n --webroot -w /usr/html -d VIRTUAL_HOST
+# install certs if virtual host and email defined and certs.conf is non-zero
+if [ "$VIRTUAL_HOST" ] && [ $LETSENCRYPT_EMAIL ] && [ ! -s ./certs.conf ] ; then
+  certbot certonly -n --webroot -w /usr/html -d $VIRTUAL_HOST --agree-tos --email $LETSENCRYPT_EMAIL
   printf "ssl_certificate_key /etc/letsencrypt/live/$VIRTUAL_HOST/privkey.pem;\n" > certs.conf
   printf "ssl_certificate /etc/letsencrypt/live/$VIRTUAL_HOST/fullchain.pem;\n" >> certs.conf
   # redirect http traffic to https
