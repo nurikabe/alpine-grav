@@ -26,11 +26,13 @@ find /usr/html -type f | xargs chmod 664
 find /usr/html -type d | xargs chmod 775
 find /usr/html -type d | xargs chmod +s
 
-# install certs
-if [ "$VIRTUAL_HOST" ] ; then
+# install certs if virtual host defined and certs.conf is non-zero
+if [ "$VIRTUAL_HOST" && ! -s /etc/nginx/certs.conf ] ; then
   certbot certonly -n --webroot -w /usr/html -d VIRTUAL_HOST
   printf "ssl_certificate_key /etc/letsencrypt/live/$VIRTUAL_HOST/privkey.pem;\n" > certs.conf
   printf "ssl_certificate /etc/letsencrypt/live/$VIRTUAL_HOST/fullchain.pem;\n" >> certs.conf
+  # redirect http traffic to https
+  printf "server { listen 80; return 301 https://$server_name$request_uri; }\n" >> certs.conf
 else
   touch /etc/nginx/certs.conf
 fi
