@@ -18,7 +18,7 @@ RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
     ln -s /sbin/php-fpm7 /sbin/php-fpm
 
 ADD files/certbot /etc/periodic/daily
-RUN chmod+x /etc/periodic/daily/certbot
+RUN chmod +x /etc/periodic/daily/certbot
 
 ADD files/nginx.conf /etc/nginx/
 ADD files/php-fpm.conf /etc/php7/
