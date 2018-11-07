@@ -17,6 +17,9 @@ RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
     sed -i "s/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/nginx:x:100:101:nginx:\/usr:\/bin\/bash/g" /etc/passwd- && \
     ln -s /sbin/php-fpm7 /sbin/php-fpm
 
+ADD files/certbot /etc/periodic/daily
+RUN chmod+x /etc/periodic/daily/certbot
+
 ADD files/nginx.conf /etc/nginx/
 ADD files/php-fpm.conf /etc/php7/
 ADD files/run.sh /

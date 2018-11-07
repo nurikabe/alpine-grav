@@ -33,6 +33,8 @@ if [ "$VIRTUAL_HOST" && ! -s /etc/nginx/certs.conf ] ; then
   printf "ssl_certificate /etc/letsencrypt/live/$VIRTUAL_HOST/fullchain.pem;\n" >> certs.conf
   # redirect http traffic to https
   printf "server { listen 80; return 301 https://$server_name$request_uri; }\n" >> certs.conf
+  # start crond in the background
+  crond
 else
   touch /etc/nginx/certs.conf
 fi
