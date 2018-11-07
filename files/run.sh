@@ -26,6 +26,15 @@ find /usr/html -type f | xargs chmod 664
 find /usr/html -type d | xargs chmod 775
 find /usr/html -type d | xargs chmod +s
 
+# install certs
+if [ "$VIRTUAL_HOST" ] ; then
+  certbot certonly -n --webroot -w /usr/html -d VIRTUAL_HOST
+  printf "ssl_certificate_key /etc/letsencrypt/live/$VIRTUAL_HOST/privkey.pem;\n" > certs.conf
+  printf "ssl_certificate /etc/letsencrypt/live/$VIRTUAL_HOST/fullchain.pem;\n" >> certs.conf
+else
+  touch /etc/nginx/certs.conf
+fi
+
 # start php-fpm
 mkdir -p /usr/logs/php-fpm
 php-fpm7

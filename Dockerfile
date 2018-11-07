@@ -17,15 +17,6 @@ RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
     sed -i "s/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/nginx:x:100:101:nginx:\/usr:\/bin\/bash/g" /etc/passwd- && \
     ln -s /sbin/php-fpm7 /sbin/php-fpm
 
-RUN if [ -z "$VIRTUAL_HOST" ] \
-    then \
-      touch /etc/nginx/certs.conf \
-    else \
-      certbot certonly -n --webroot -w /usr/html -d VIRTUAL_HOST \
-      printf "ssl_certificate_key /etc/letsencrypt/live/$VIRTUAL_HOST/privkey.pem;\n" > certs.conf \
-      printf "ssl_certificate /etc/letsencrypt/live/$VIRTUAL_HOST/fullchain.pem;\n" >> certs.conf \
-    fi
-
 ADD files/nginx.conf /etc/nginx/
 ADD files/php-fpm.conf /etc/php7/
 ADD files/run.sh /
