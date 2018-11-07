@@ -26,9 +26,6 @@ find /usr/html -type f | xargs chmod 664
 find /usr/html -type d | xargs chmod 775
 find /usr/html -type d | xargs chmod +s
 
-# always touch certs.conf to ensure that nginx will always start
-touch /etc/nginx/certs.conf
-
 # install certs if virtual host and email defined and certs.conf is non-zero
 if [ "$VIRTUAL_HOST" ] && [ $LETSENCRYPT_EMAIL ] && [ ! -s ./certs.conf ] ; then
   # nginx not yet running so use certbot's "standalone" built-in web server
@@ -40,6 +37,9 @@ if [ "$VIRTUAL_HOST" ] && [ $LETSENCRYPT_EMAIL ] && [ ! -s ./certs.conf ] ; then
   # start crond in the background
   crond
 fi
+
+# touch certs.conf to ensure that nginx will always start
+touch /etc/nginx/certs.conf
 
 # start php-fpm
 mkdir -p /usr/logs/php-fpm
