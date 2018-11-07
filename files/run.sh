@@ -33,13 +33,14 @@ if [ "$VIRTUAL_HOST" ] && [ $LETSENCRYPT_EMAIL ] && [ ! -s ./certs.conf ] ; then
   printf "ssl_certificate_key /etc/letsencrypt/live/$VIRTUAL_HOST/privkey.pem;\n" > /etc/nginx/certs.conf
   printf "ssl_certificate /etc/letsencrypt/live/$VIRTUAL_HOST/fullchain.pem;\n" >> /etc/nginx/certs.conf
   # redirect http traffic to https
-  #printf 'server { listen 80; return 301 https://$server_name$request_uri; }' >> /etc/nginx/certs.conf
+  printf 'server { listen 80; return 301 https://$server_name$request_uri; }' > /etc/nginx/redirect.conf
   # start crond in the background
   crond
 fi
 
-# touch certs.conf to ensure that nginx will always start
+# touch include conf files to ensure that nginx will always start
 touch /etc/nginx/certs.conf
+touch /etc/nginx/redirect.conf
 
 # start php-fpm
 mkdir -p /usr/logs/php-fpm
